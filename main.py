@@ -156,21 +156,21 @@ def two_hundred_attempts():
     plt.ylabel("Tamaño promedio del espacio de búsqueda")
     plt.show()
 
-# while True:
-#     solver = MastermindSolver()
-#     secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
+while True:
+    solver = MastermindSolver()
+    secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
     
-#     if len(secret_code) != 4:
-#         print("\nFormato incorrecto ingresa exactamente 4 colores\n")
+    if len(secret_code) != 4:
+        print("\nFormato incorrecto ingresa exactamente 4 colores\n")
     
-#     else:
-#         attempts, avg_attempts = solver.solve_automatic(secret_code)
+    else:
+        attempts, avg_attempts = solver.solve_automatic(secret_code)
 
-#         print(f"\nModo automático - Resuelto en {attempts} intentos")
+        print(f"\nModo automático - Resuelto en {attempts} intentos")
 
-#         input("\n Presiona ENTER para continuar al modo en tiempo real\n")
+        input("\n Presiona ENTER para continuar al modo en tiempo real\n")
 
-#         solver = MastermindSolver()
-#         solver.solve_real_time()
+        solver = MastermindSolver()
+        solver.solve_real_time()
 
-two_hundred_attempts()
+# two_hundred_attempts()
