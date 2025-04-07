@@ -2,6 +2,7 @@ import itertools
 import seaborn as sns
 import matplotlib.pyplot as plt
 import random
+import statistics
 import pandas as pd
 from logic_project import *
 
@@ -128,11 +129,14 @@ class MastermindSolver:
         
 def two_hundred_attempts():
     all_data = []
+    all_attempts = []
 
     for i in range(200):
         solver = MastermindSolver()
         secret_code = tuple(random.choices(solver.COLORS, k=4))
-        solver.solve_automatic(secret_code)
+        attempts, _ = solver.solve_automatic(secret_code)
+
+        all_attempts.append(attempts)
 
         for intento_num, space_size in enumerate(solver.search_space_sizes, 1):
             all_data.append({
@@ -141,30 +145,32 @@ def two_hundred_attempts():
                 "Espacio de búsqueda": space_size
             })
 
+    promedio_intentos = statistics.mean(all_attempts)
+    print(f"\nPromedio de intentos para resolver el juego en 200 simulaciones: {promedio_intentos:.2f}")
     df = pd.DataFrame(all_data)
 
     plt.figure(figsize=(12, 6))
     sns.barplot(data=df, x="Intento", y="Espacio de búsqueda", estimator="mean")
-    plt.title("Promedio del tamaño del espacio de búsqueda por intento (200 juegos)")
+    plt.title(f"Promedio del tamaño del espacio de búsqueda por intento (200 juegos)\nPromedio de intentos para resolver el juego: {promedio_intentos:.2f}")
     plt.xlabel("Intento")
     plt.ylabel("Tamaño promedio del espacio de búsqueda")
     plt.show()
 
-while True:
-    solver = MastermindSolver()
-    secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
+# while True:
+#     solver = MastermindSolver()
+#     secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
     
-    if len(secret_code) != 4:
-        print("\nFormato incorrecto ingresa exactamente 4 colores\n")
+#     if len(secret_code) != 4:
+#         print("\nFormato incorrecto ingresa exactamente 4 colores\n")
     
-    else:
-        attempts, avg_attempts = solver.solve_automatic(secret_code)
+#     else:
+#         attempts, avg_attempts = solver.solve_automatic(secret_code)
 
-        print(f"\nModo automático - Resuelto en {attempts} intentos")
+#         print(f"\nModo automático - Resuelto en {attempts} intentos")
 
-        input("\n Presiona ENTER para continuar al modo en tiempo real\n")
+#         input("\n Presiona ENTER para continuar al modo en tiempo real\n")
 
-        solver = MastermindSolver()
-        solver.solve_real_time()
+#         solver = MastermindSolver()
+#         solver.solve_real_time()
 
-# two_hundred_attempts()
+two_hundred_attempts()
