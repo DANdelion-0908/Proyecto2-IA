@@ -64,11 +64,14 @@ class MastermindSolver:
 
         return self.knowledge.evaluate(model)
 
-    def make_guess(self):        
+    def make_guess(self, is_first_guess):       
         if not self.possible_combinations:
             raise ValueError("No hay combinaciones posibles consistentes con el conocimiento")
         
-        return self.possible_combinations[0]
+        if is_first_guess:
+            return random.choice(self.possible_combinations)
+        else:
+            return self.possible_combinations[0]
 
     def solve_automatic(self, secret):        
         self.initialize_knowledge()
@@ -77,7 +80,7 @@ class MastermindSolver:
         self.avg_attempts = {}
         
         while True:
-            guess = self.make_guess()
+            guess = self.make_guess(True)
             if guess == secret:
                 print(f"\nModo automático - Resuelto en {self.attempts} intentos")
                 print("Evolución del tamaño del espacio de búsqueda:")
@@ -95,13 +98,15 @@ class MastermindSolver:
         self.initialize_knowledge()
         self.attempts = 0
         self.search_space_sizes = []
-        
+        is_first_guess = True
+
         print("\nMastermind Solver - Modo en Tiempo Real")
         print(f"Colores disponibles: {', '.join(self.COLORS)}")
         print("Ingresa la retroalimentación como dos números separados por espacio (ej. '1 2')")
 
         while len(self.possible_combinations) > 1:
-            guess = self.make_guess()
+            guess = self.make_guess(is_first_guess)
+            is_first_guess = False
             print(f"\nIntento {self.attempts + 1}: Adivinanza sugerida → {guess}")
             
             while True:
@@ -131,7 +136,7 @@ def two_hundred_attempts():
     all_data = []
     all_attempts = []
 
-    for i in range(200):
+    for i in range(20):
         solver = MastermindSolver()
         secret_code = tuple(random.choices(solver.COLORS, k=4))
         attempts, _ = solver.solve_automatic(secret_code)
@@ -157,20 +162,27 @@ def two_hundred_attempts():
     plt.show()
 
 while True:
+    print("\nBienvenido al juego Mastermind! \n")
+    print("1. Modo automático \n2. Modo en tiempo real \n3. Salir \n")
+    option = int(input("Ingresa la opción a realizar: "))
+
     solver = MastermindSolver()
-    secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
     
-    if len(secret_code) != 4:
-        print("\nFormato incorrecto ingresa exactamente 4 colores\n")
-    
-    else:
+    if option == 1:
+        secret_code = tuple(input(f"Ingresa la combinación de colores separados por comas (azul, rojo, blanco, negro, verde, purpura): ").strip().split(","))
         attempts, avg_attempts = solver.solve_automatic(secret_code)
-
         print(f"\nModo automático - Resuelto en {attempts} intentos")
+        input("\n Presiona ENTER para continuar\n")
 
-        input("\n Presiona ENTER para continuar al modo en tiempo real\n")
-
-        solver = MastermindSolver()
+        
+    elif option == 2:
         solver.solve_real_time()
+
+    elif option == 3:
+        print("¡Gracias por jugar!")
+        break
+
+    else:
+        print("Opción inválida. Por favor, selecciona una opción válida.")
 
 # two_hundred_attempts()
